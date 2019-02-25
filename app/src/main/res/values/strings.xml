@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ComodoVid</string>
+    <string name="create_video_txt">create video</string>
+    <string name="view_album_txt">view album</string>
 </resources>
