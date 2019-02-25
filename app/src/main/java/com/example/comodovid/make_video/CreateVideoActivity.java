@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,9 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.example.comodovid.Constants;
 import com.example.comodovid.R;
+import com.example.comodovid.glide.GlideApp;
+import com.example.comodovid.glide.MyAppGlideModule;
 import com.example.comodovid.utils.ImageUtils;
 import com.example.comodovid.utils.PermissionUtils;
 import com.example.comodovid.video_album.VideoAlbumActivity;
@@ -68,7 +74,7 @@ public class CreateVideoActivity extends AppCompatActivity {
             openFilesIntent();
         } else {
             PermissionUtils.requestPermission(this,
-                    new String[]{Manifest.permission.CAMERA}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
         }
     }
 
@@ -138,7 +144,37 @@ public class CreateVideoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-          if (requestCode == TAKE_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                filePath = ImageUtils.getPath(this, uri);
+                System.out.println("filepath "+filePath);
+                if (filePath != null) {
+                    String fileExtension = filePath.substring(filePath.lastIndexOf('.') + 1);
+                    if (fileExtension.equalsIgnoreCase("jpg") ||
+                            fileExtension.equalsIgnoreCase("jpeg")
+                            || fileExtension.equalsIgnoreCase("png")) {
+                        imageView.setImageDrawable(null);
+                        imageView.setVisibility(View.VISIBLE);
+                        File file = new File(filePath);
+                        GlideApp.with(this)
+                                .load(file)
+                                .placeholder(R.drawable.ic_picture)
+                                .error(R.drawable.ic_picture)
+                                .into(imageView);
+
+                    } else {
+                        Toast.makeText(this,"Unsupported file format", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this,"Unsupported file format", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+        if (requestCode == TAKE_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
             filePath = mCurrentPhotoPath;
             File file = new File(filePath);
             Uri uri = Uri.fromFile(file);
