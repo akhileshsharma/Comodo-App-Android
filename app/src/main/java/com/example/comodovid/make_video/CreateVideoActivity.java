@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,7 @@ import com.example.comodovid.Constants;
 import com.example.comodovid.R;
 import com.example.comodovid.glide.GlideApp;
 import com.example.comodovid.glide.MyAppGlideModule;
+import com.example.comodovid.preview_image.PreviewImageActivity;
 import com.example.comodovid.utils.ImageUtils;
 import com.example.comodovid.utils.PermissionUtils;
 import com.example.comodovid.video_album.VideoAlbumActivity;
@@ -49,6 +51,18 @@ public class CreateVideoActivity extends AppCompatActivity {
 
     @BindView(R.id.imageView)
     ImageView imageView;
+
+    @BindView(R.id.click_image_btn)
+    TextView click_image_btn;
+    @BindView(R.id.pick_image_btn)
+    TextView pick_image_btn;
+    @BindView(R.id.proceed_btn)
+    TextView proceed_btn;
+    @BindView(R.id.take_again_btn)
+    TextView take_again_btn;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +90,21 @@ public class CreateVideoActivity extends AppCompatActivity {
             PermissionUtils.requestPermission(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
         }
+    }
+
+    @OnClick(R.id.proceed_btn)
+    void onClickProceedBtn(){
+        Intent intent = new Intent(this, PreviewImageActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.take_again_btn)
+    void onClickTakeAgainBtn(){
+        pick_image_btn.setVisibility(View.VISIBLE);
+        click_image_btn.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.GONE);
+        proceed_btn.setVisibility(View.GONE);
+        take_again_btn.setVisibility(View.GONE);
     }
 
     private void openCameraIntent() {
@@ -140,7 +169,12 @@ public class CreateVideoActivity extends AppCompatActivity {
             openFilesIntent();
         }
     }
-
+    private void onImageSelectionSuccess(){
+        pick_image_btn.setVisibility(View.GONE);
+        click_image_btn.setVisibility(View.GONE);
+        proceed_btn.setVisibility(View.VISIBLE);
+        take_again_btn.setVisibility(View.VISIBLE);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -148,6 +182,7 @@ public class CreateVideoActivity extends AppCompatActivity {
 
             Uri uri = null;
             if (data != null) {
+                onImageSelectionSuccess();
                 uri = data.getData();
                 filePath = ImageUtils.getPath(this, uri);
                 System.out.println("filepath "+filePath);
@@ -175,6 +210,7 @@ public class CreateVideoActivity extends AppCompatActivity {
             }
         }
         if (requestCode == TAKE_PHOTO_REQUEST && resultCode == Activity.RESULT_OK) {
+            onImageSelectionSuccess();
             filePath = mCurrentPhotoPath;
             File file = new File(filePath);
             Uri uri = Uri.fromFile(file);
