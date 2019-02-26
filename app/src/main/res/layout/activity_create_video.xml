@@ -6,20 +6,20 @@
     android:layout_height="match_parent"
     android:background="#fff"
     tools:context=".make_video.CreateVideoActivity">
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
 
     <TextView
         android:id="@+id/click_image_btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="236dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="225dp"
         android:background="@color/colorAccent"
         android:gravity="center"
         android:text="Click Image"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,28 +27,25 @@
         android:id="@+id/pick_image_btn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="296dp"
+        android:layout_marginEnd="24dp"
         android:background="@color/colorAccent"
         android:gravity="center"
         android:text="Pick Image"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/click_image_btn" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:visibility="visible"
+        android:layout_height="550dp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/"
-        android:background="#000"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:background="#5000"
+        />
 
     <TextView
         android:id="@+id/proceed_btn"
