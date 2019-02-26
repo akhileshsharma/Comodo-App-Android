@@ -14,8 +14,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,8 @@ public class CreateVideoActivity extends AppCompatActivity {
     TextView proceed_btn;
     @BindView(R.id.take_again_btn)
     TextView take_again_btn;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
 
 
@@ -69,7 +73,20 @@ public class CreateVideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_video);
         ButterKnife.bind(this);
+        initViews();
 
+    }
+
+    private void initViews() {
+        setSupportActionBar(toolbar);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Create Video");
+        ImageView backButton = toolbar.findViewById(R.id.home_button);
+        backButton.setImageResource(R.drawable.ic_arrow_back);
+        RelativeLayout backBtnRL = toolbar.findViewById(R.id.home_button_layout);
+        backBtnRL.setOnClickListener(view -> {
+            onBackPressed();
+        });
     }
 
     @OnClick(R.id.click_image_btn)
